@@ -8,6 +8,7 @@ def get_connection() -> mysql.connector.connection:
         cnx = mysql.connector.connect(
             option_files=f"{pathlib.Path(__file__).parent.resolve()}/connector.cnf"
         )
+        print("Connection established")
         return cnx
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:

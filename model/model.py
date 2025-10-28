@@ -1,6 +1,5 @@
 from database.DB_connect import get_connection
 from model.automobile import Automobile
-from model.noleggio import Noleggio
 
 '''
     MODELLO: 
@@ -13,6 +12,8 @@ class Autonoleggio:
     def __init__(self, nome, responsabile):
         self._nome = nome
         self._responsabile = responsabile
+        self.__cnx = get_connection()
+        self.__cursor = self.__cnx.cursor()
 
     @property
     def nome(self):
@@ -37,6 +38,12 @@ class Autonoleggio:
         """
 
         # TODO
+        self.__query = """SELECT * FROM automobile"""
+        self.__cursor.execute(self.__query)
+        self.__automobili = []
+        for auto in self.__cursor:
+            self.__automobili.append(Automobile(codice=auto[0], marca=auto[1], modello=auto[2], anno=auto[3], posti=auto[4]))
+        return list(self.__automobili)
 
     def cerca_automobili_per_modello(self, modello) -> list[Automobile] | None:
         """
@@ -45,3 +52,10 @@ class Autonoleggio:
             :return: una lista con tutte le automobili di marca e modello indicato oppure None
         """
         # TODO
+        self.__query = f"""SELECT * FROM automobile WHERE modello = '{modello}'"""
+        self.__cursor.execute(self.__query)
+        self.__automobili = []
+        for auto in self.__cursor:
+            self.__automobili.append(
+                Automobile(codice=auto[0], marca=auto[1], modello=auto[2], anno=auto[3], posti=auto[4]))
+        return list(self.__automobili)
